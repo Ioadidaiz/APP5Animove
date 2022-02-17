@@ -24,9 +24,8 @@ storks.indis.W <-  getMovebankAnimals(study.west[1], login= login)
 
 ## specific individual: yolo
 
-yolo <- getMovebankData(study.west[1], 
-                       animalName = storks.indis.W[storks.indis.W$tag_local_identifier == 2666, "local_identifier"],
-                       login = login)
+yolo <- getMovebankData(study.west[1],animalName = c(storks.indis.W[storks.indis.W$tag_local_identifier == 2666, "local_identifier"],storks.indis.W[storks.indis.W$tag_local_identifier == 2561, "local_identifier"], storks.indis.W[storks.indis.W$tag_local_identifier == 3031, "local_identifier"], (storks.indis.W[storks.indis.W$tag_local_identifier == 4001, "local_identifier"][4])),login = login, removeDuplicatedTimestamps=TRUE)
+
 plot(yolo)
 
 # convert to data frame with sf
@@ -39,7 +38,7 @@ library(ggplot2)
 ggplot(yolo.sf)+
   geom_sf()
 
-mapview::mapview(yolo.sf)
+#mapview::mapview(yolo.sf)
 
 
 # coords, timestamps and lags:
@@ -82,7 +81,7 @@ library(raster)
 move_data <- align_move(yolo, res = 1, unit = "days")
 plot(move_data)
 
-frames <- frames_spatial(move_data, path_colours = c("red"),
+frames <- frames_spatial(move_data, path_colours = c("red","green","blue","orange"),
                          map_service = "osm", map_type = "watercolor", alpha = 0.5)
 
 length(frames) # number of frames
@@ -96,7 +95,7 @@ frames[[100]]
 #To represent the base map in its original projection, just reproject your movement data to the WGS 84 / Pseudo Mercator projection and disable the calculation of an equidistant extent:
   
   move_data <- sp::spTransform(move_data, crs("+init=epsg:3857"))
-frames <- frames_spatial(move_data, path_colours = c("red"),
+frames <- frames_spatial(move_data, path_colours = c("red","green","blue","orange"),
                          map_service = "osm", map_type = "streets", map_res = 0.8, equidistant = F)
 frames[[100]] # display one of the frames
 
